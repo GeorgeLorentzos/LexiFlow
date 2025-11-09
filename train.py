@@ -6,6 +6,7 @@ with open('data', 'r') as file:
     data = data.split()
 
 voc = sorted(list(set(data)))
+voc.append("<UNK>")
 word2index = {word: i for i, word in enumerate(voc)}
 index2word = {i: word for word, i in word2index.items()}
 
@@ -57,7 +58,8 @@ def predict(text, next_words=1):
     
     if isinstance(text, str):
         text = text.split()
-    input_indices = torch.tensor([word2index[word] for word in text], dtype=torch.long).unsqueeze(0)  # [1, seq_len]
+    input_indices = torch.tensor([word2index.get(word, word2index["<UNK>"]) for word in text], dtype=torch.long).unsqueeze(0)
+
 
     predicted_words = []
 
